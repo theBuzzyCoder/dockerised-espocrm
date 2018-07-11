@@ -1,45 +1,39 @@
 version: '3.3'
 services:
   web:
-    image: espocrm:v2
+    image: nginx:alpine
     ports:
       - 8000:8000
     environment:
       - NGINX_HOST=localhost
     volumes:
-      - "./dockerised-espo/espocrm:/usr/share/nginx/html"
-    command: /bin/sh -c "envsubst '$$NGINX_HOST' < /etc/nginx/conf.d/app.conf > /etc/nginx/conf.d/app.conf && nginx -g 'daemon off;'"
+      - ./espo-nginx/nginx.conf:/etc/nginx/conf.d/default.conf
+      - ./espo-nginx/nginx.conf:/etc/nginx/sites-available/default
+      - ./espo-nginx/nginx.conf:/etc/nginx/sites-enabled/default
+    links:
+      - phpfpm
     restart: always
     depends_on:
-      - php
-
-  php:
-    image: php:7.1-fpm
+      - phpfpm
+  phpfpm:
+    image: php7.1:alpine-espo
     restart: always
-    volumes:
-      - "./dockerised-espo/espocrm:/var/www/html"
-
-  # mysqldb:
-  #   image: mysql:${MYSQL_VERSION}
-  #   container_name: ${MYSQL_HOST}
-  #   restart: always
-  #   env_file:
-  #     - ".env"
-  #   environment:
-  #     - MYSQL_DATABASE=${MYSQL_DATABASE}
-  #     - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
-  #     - MYSQL_USER=${MYSQL_USER}
-  #     - MYSQL_PASSWORD=${MYSQL_PASSWORD}
-  #   ports:
-  #     - "3364:3306"
-  #   volumes:
-  #     - "./data/db/mysql:/var/lib/mysql"
-  myadmin:
-    image: phpmyadmin/phpmyadmin
-    container_name: phpmyadmin
     ports:
-      - "8080:80"
+      - 9000:9000
+  mysql:
+    image: mysql:${MYSQL_VERSION}
     environment:
-      - PMA_ARBITRARY=1
-      - PMA_HOST=${MYSQL_HOST}
+      MYSQL_ROOT_PASSWORD:
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    env_file:
+      - ".env"
+    links:
+      - mysql
+    ports:
+      - 8183:80
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_USER: ${MYSQL_USER}
+      PMA_ARBITRARY: 1
     restart: always
