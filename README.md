@@ -4,7 +4,10 @@ Dockerised version of espocrm
 
 # Installation
 
-Below command will pull and setup docker images as well as the espocrm directory.
+**Follow Below Setups**
+*In Order*
+
+Below command will make the complete setup of docker version of espocrm in your machine.
 
 ```bash
 curl --silent --show-error https://raw.githubusercontent.com/theBuzzyCoder/dockerised-espo/master/installer.sh | sh
