@@ -10,7 +10,7 @@ fi
 cd $WORKDIR/php7.2-espocrm
 
 git clone git://github.com/espocrm/espocrm.git
-export CRMDIR=$WORKDIR/espocrm
+export CRMDIR=$WORKDIR/php7.2-espocrm/espocrm
 cd $CRMDIR
 
 # Add developer mode to espocrm/data/config.php
