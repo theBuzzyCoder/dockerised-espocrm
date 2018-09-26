@@ -1,7 +1,7 @@
 export WORKDIR=$HOME/dockerised-espo
 mkdir -p $WORKDIR
 
-if [ -d cd $WORKDIR/php7.2-espocrm ]; then
+if [ -d $WORKDIR/php7.2-espocrm ]; then
   echo "php directory found";
 else
   git clone git://github.com/theBuzzyCoder/dockerised-espo.git $WORKDIR
