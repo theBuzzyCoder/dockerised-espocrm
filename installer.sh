@@ -41,3 +41,6 @@ sudo npm install
 
 # Compiling less to generate compiled css
 grunt less
+
+cd $WORKDIR
+docker build -t php-espocrm:stable php7.2-espocrm
