@@ -23,6 +23,13 @@ git clone git://github.com/espocrm/espocrm.git
 export CRMDIR=$WORKDIR/php7.2-espocrm/espocrm
 cd $CRMDIR
 
+if [ -f "$(which composer)" ]; then
+  composer install -o
+else
+  curl --silent --show-error https://getcomposer.org/installer | php && cp composer.phar /usr/local/bin/composer
+  composer install -o
+fi
+
 # Add developer mode to espocrm/data/config.php
 echo "<?php return ['isDeveloperMode' => true]; ?>" > $CRMDIR/data/config.php
 
