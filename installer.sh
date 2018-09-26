@@ -1,8 +1,20 @@
-git clone git://github.com/espocrm/espocrm.git
+export WORKDIR=$HOMEDIR/dockerised-espo
+mkdir -p $WORKDIR
 
-cd espocrm
+if [ -d cd $WORKDIR/php7.2-espocrm ]; then
+  echo "php directory found";
+else
+  git clone git://github.com/theBuzzyCoder/dockerised-espo.git $WORKDIR
+fi
+
+cd $WORKDIR/php7.2-espocrm
+
+git clone git://github.com/espocrm/espocrm.git
+export CRMDIR=$WORKDIR/espocrm
+cd $CRMDIR
+
 # Add developer mode to espocrm/data/config.php
-echo "<?php return ['isDeveloperMode' => true]; ?>" > ./data/config.php
+echo "<?php return ['isDeveloperMode' => true]; ?>" > $CRMDIR/data/config.php
 
 sudo apt install nodejs npm
 npm install -g grunt
