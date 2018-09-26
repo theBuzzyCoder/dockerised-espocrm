@@ -1,3 +1,13 @@
+if [ -x "$(which docker)" ]; then
+  echo "docker not found. Install docker first ..."
+  exit
+fi
+
+if [ -x "$(which docker-compose)" ]; then
+  echo "docker-compose not found. Installing it now ..."
+  sudo apt install docker-compose
+fi
+
 export WORKDIR=$HOME/dockerised-espo
 mkdir -p $WORKDIR
 
