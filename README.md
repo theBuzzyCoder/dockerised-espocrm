@@ -4,7 +4,7 @@ Dockerised version of espocrm
 
 # Installation
 
-**Follow Below Setups**
+**NOTE: Do not clone this repository. Follow Below Setups and it will automatically clone the repository**
 
 *In Order*
 
