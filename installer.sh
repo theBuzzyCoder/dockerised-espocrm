@@ -17,10 +17,10 @@ cd $CRMDIR
 echo "<?php return ['isDeveloperMode' => true]; ?>" > $CRMDIR/data/config.php
 
 sudo apt install nodejs npm
-npm install -g grunt
+sudo npm install -g grunt
 
 # Building node_modules in local machine before mount for development enviornment
-npm install
+sudo npm install
 
 # Compiling less to generate compiled css
 grunt less
