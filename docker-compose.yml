@@ -11,7 +11,7 @@ services:
       MYSQL_DATABASE: espocrm
 
   phpfpm:
-    image: php-source:1.0
+    image: php-espocrm:stable
     ports:
       - 9000:9000
     volumes:
