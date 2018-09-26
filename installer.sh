@@ -1,4 +1,4 @@
-export WORKDIR=$HOMEDIR/dockerised-espo
+export WORKDIR=$HOME/dockerised-espo
 mkdir -p $WORKDIR
 
 if [ -d cd $WORKDIR/php7.2-espocrm ]; then
