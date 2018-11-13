@@ -17,11 +17,11 @@ I will take Lead for example, and let's say ProjectManager is the Module Name.
 Ideally, this class should not contain any logic.
 
 Methods in this class should do the following:
-1) See if request method is valid
-2) See if required data is sent
-3) See if user has privilege to make request
-4) Call required service using `$this->getRecordService("ServiceClassName")->serviceMethodName();`
-5) Return response in the form of array
+1. See if request method is valid
+2. See if required data is sent
+3. See if user has privilege to make request
+4. Call required service using `$this->getRecordService("ServiceClassName")->serviceMethodName();`
+5. Return response in the form of array
 
 ```php
 namespace Espo\Modules\ProjectManager\Controllers;
