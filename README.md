@@ -87,6 +87,46 @@ EspoCRM allows build your own custom extensions to suit your needs.
   - `docker exec <crmServer> php -f rebuild.php`
   - Go to your browser and run `Ctrl + F5` or `Ctrl + Shift + r` to force reload all the .js and .css files.
 
+## Running Unit and Integration Tests
+
+You can run tests only on development mode. So, your docker-compose file should be dev.docker-compose.yml
+while bringing containers up.
+
+### Installing phpunit
+
+```bash
+docker exec devCrmServer apk add wget
+docker exec devCrmServer wget -O phpunit https://phar.phpunit.de/phpunit-7.phar
+docker exec devCrmServer chmod +x phpunit
+```
+
+### Unit Test
+
+```bash
+docker exec devCrmServer phpunit --bootstrap ./vendor/autoload.php tests/unit
+```
+
+### Integration Test
+
+Make sure you update the version in config.php file to your Espo version. By default it will be `@@version`.
+
+For example, if espo crm version is 5.4.5 then in config.php make sure it is 5.4.5.
+
+Also you have to generate build before running integration tests. The build will be present in `/crm/espocrm/build/EspoCRM-5.4.5`
+
+Generating build:
+```bash
+docker run --rm -v /crm/espocrm:/app node:8.12.0-alpine sh -c "cd /app; npm install; npm install -g grunt-cli; grunt"
+```
+
+Running Test:
+```bash
+docker exec devCrmServer cp data/config.php tests/integration/config.php
+docker exec devCrmServer phpunit --bootstrap ./vendor/autoload.php tests/integration
+```
+
+It takes a while to running integration tests unlike unit tests.
+
 ## Contributors
 
 [List of Contributors](./Contributors.md)
