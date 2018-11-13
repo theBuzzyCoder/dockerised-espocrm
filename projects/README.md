@@ -2,10 +2,10 @@
 
 Tree structure
 
-- /crm/projects/<project-name>
+- /crm/projects/\<project-name\>
   - files
-    - application/Espo/Modules/<ModuleName>
-    - client/modules/<modulename>
+    - application/Espo/Modules/\<ModuleName\>
+    - client/modules/\<modulename\>
     - CommandLineRunners.php
   - scripts
     - BeforeInstall.php
