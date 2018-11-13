@@ -6,7 +6,7 @@ services:
     image: mysql:5.7
     container_name: devCrmMysql
     ports:
-      - 3306:3306
+      - 3364:3306
     environment:
       MYSQL_ROOT_PASSWORD: ${mysql_root_passwd}
       MYSQL_USER: ${mysql_user}

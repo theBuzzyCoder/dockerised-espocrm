@@ -38,16 +38,9 @@ Install Pre-requisites for EspoCRM with docker in Development mode
 
     -V,Run script in verbose mode. Will print out each step of execution.
 
-  Pre Installation:
-      If you get Permission denied while running docker commands such as
-
-      $ docker container ls
-
-      Run this command first:
-
-      $ usermod -aG docker $USER
-
-      Reboot your system and run installer.
+Pre Installation:
+1) Go to Docker Preferences => File Sharing
+2) Add /crm path, otherwise mount will fail.
 
 EOF
 # EOF is found above and hence cat command stops reading. This is equivalent to echo but much neater when printing out.
@@ -112,6 +105,8 @@ python $WORKDIR/repo_tools/install.py
 if [ ! -d $CRMDIR ];
 then
     cd $WORKDIR;
+    ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)";
+    brew install wget --with-libressl;
     wget -O /tmp/espocrm.zip https://github.com/espocrm/espocrm/archive/$version.zip;
     unzip -d . /tmp/espocrm.zip;
     mv espocrm-$version espocrm;
@@ -125,15 +120,14 @@ docker run --rm -v $(pwd):/app composer:1.7.2 install -o --ignore-platform-reqs;
 
 if [ ! -d $CRMDIR/build/EspoCRM-$version ];
 then
-    docker run --rm -v $(pwd):/srv huli/grunt:alpine --force;
+    docker run --rm -v $(pwd):/app node:8.12.0-alpine sh -c "cd /app; npm install; npm install -g grunt-cli; grunt"
 fi
 
-sudo usermod -aG nogroup $USER
-sudo chown -R nobody:nogroup $CRMDIR
 cd $WORKDIR;
 
 # This is to add extensions after building images.
 docker-compose -f dev.docker-compose.yml up -d
+docker exec devCrmServer chown -R nobody:nogroup $CRMDIR
 
 cat << EOF
 

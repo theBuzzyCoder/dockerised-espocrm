@@ -7,3 +7,4 @@ docker-compose.yaml
 ./tests/unit/testData/cache/*
 !/tests/unit/testData/cache/.data
 ./tests/integration/config.php
+package-lock.json
