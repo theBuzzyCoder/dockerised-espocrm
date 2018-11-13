@@ -2,6 +2,10 @@
 
 Dockerized EspoCRM with ability to run unit-test during development and use build of EspoCRM in production.
 
+## Cloning this repository
+
+Explanation of require path configurations are given [here](./webapp/README.md)
+
 ## Pre-Installation
 
 ### Ubuntu / Linux

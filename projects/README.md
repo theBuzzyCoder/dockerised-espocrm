@@ -10,7 +10,7 @@ If you want to modify an existing entity then make sure you override the followi
 
 I will take Lead for example, and let's say ProjectManager is the Module Name.
 
-- /crm/projects/files/application/Espo/Modules/ProjectManager/Controllers/Lead.php
+- `/crm/projects/files/application/Espo/Modules/ProjectManager/Controllers/Lead.php`
 
 **If you don't inherit this file, then while loading Leads in application you will receive 404 Error**
 
@@ -31,7 +31,7 @@ class Lead extends \Espo\Modules\Crm\Controllers\Lead
 }
 ```
 
-- /crm/projects/files/application/Espo/Modules/ProjectManager/Entities/Lead.php
+- `/crm/projects/files/application/Espo/Modules/ProjectManager/Entities/Lead.php`
 
 **If you don't inherit this file, then while loading Leads in application you will receive Bad Server Response.**
 
@@ -43,7 +43,7 @@ class Lead extends \Espo\Modules\Crm\Entities\Lead
 }
 ```
 
-- /crm/projects/files/application/Espo/Modules/ProjectManager/Repositories/Lead.php
+- `/crm/projects/files/application/Espo/Modules/ProjectManager/Repositories/Lead.php`
 
 Database level operations are performed here like `afterSave`, `beforeSave`, etc...
 **If you don't inherit this file, then functions like afterSave written in Crm Module of Espo's base repository will not run for Lead after creating an entry in database.**
@@ -58,7 +58,7 @@ class Lead extends \Espo\Modules\Crm\Repositories\Lead
 }
 ```
 
-- /crm/projects/files/application/Espo/Modules/ProjectManager/SelectManagers/Lead.php
+- `/crm/projects/files/application/Espo/Modules/ProjectManager/SelectManagers/Lead.php`
 
 Used to add custom filters in UI's List View.
 
@@ -70,7 +70,7 @@ class Lead extends \Espo\Modules\Crm\SelectManagers\Lead
 }
 ```
 
-- /crm/projects/files/application/Espo/Modules/ProjectManager/Services/Lead.php
+- `/crm/projects/files/application/Espo/Modules/ProjectManager/Services/Lead.php`
 
 Contains Logic to perform operations and is called by Controllers
 
@@ -134,19 +134,21 @@ Here's how: [Creating an installable extension package](https://www.espocrm.com/
 
 ## Tree structure
 
-- /crm/projects/\<project-name\>
-  - files
-    - application/Espo/Modules/\<ModuleName\>
-    - client/modules/\<modulename\>
-    - CommandLineRunners.php
-  - scripts
-    - BeforeInstall.php
-    - AfterInstall.php
-    - BeforeUninstall.php
-    - AfterUninstall.php
-  - manifest.json
+- `/crm/projects/\<project-name\>/`
+  - `files/`
+    - `application/Espo/Modules/\<ModuleName\>/`
+    - `client/modules/\<modulename\>/`
+    - `CommandLineRunners.php`
+  - `scripts/`
+    - `BeforeInstall.php`
+    - `AfterInstall.php`
+    - `BeforeUninstall.php`
+    - `AfterUninstall.php`
+  - `manifest.json`
 
-In dev.docker-compose.yml, mount to folders
+The `scripts` folder is an optional folder.
+
+In `dev.docker-compose.yml`, mount to folders
 
 ```
 - /crm/projects/<project-name>/files/application/Espo/Modules/<ModuleName>:/crm/espocrm/application/Espo/Modules/<ModuleName>
@@ -154,7 +156,7 @@ In dev.docker-compose.yml, mount to folders
 - /crm/projects/<project-name>/files/CommandLineRunners.php:/crm/espocrm/CommandLineRunners.php
 ```
 
-In Dockerfile, use below
+In `Dockerfile`, use below
 
 ```
 COPY ./projects/<project-name>/files /crm/espocrm
