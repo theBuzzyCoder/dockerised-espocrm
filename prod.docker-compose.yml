@@ -13,7 +13,7 @@ services:
       MYSQL_PASSWORD: ${mysql_passwd}
       MYSQL_DATABASE: ${mysql_db}
     volumes:
-      - mysql-test-data:/var/lib/mysql
+      - mysql-data:/var/lib/mysql
 
   phpmyadmin:
     image: phpmyadmin/phpmyadmin
@@ -35,7 +35,7 @@ services:
       args:
         VERSION: ${espo}
     ports:
-      - 8088:80
+      - 80:80
     environment:
       NGINX_STATIC_CONTENT_OPEN_FILE_CACHE: "off"
       NGINX_ERROR_LOG_LEVEL: debug
@@ -49,8 +49,9 @@ services:
     links:
       - mysqldb:mysql
     volumes:
-      - ./espocrm/data:/crm/espocrm/data
+      - database-configurations:/crm/espocrm/data
     command: "nginx -g 'daemon off;'"
 
 volumes:
-  mysql-test-data:
+  mysql-data:
+  database-configurations:

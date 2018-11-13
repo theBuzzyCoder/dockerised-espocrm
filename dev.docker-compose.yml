@@ -35,7 +35,7 @@ services:
       args:
         VERSION: ${espo}
     ports:
-      - 80:80
+      - 8088:80
     volumes:
       - ./espocrm:/crm/espocrm
       - ./tests:/crm/espocrm/tests
