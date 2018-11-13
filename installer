@@ -1,41 +1,5 @@
 #!/bin/bash
 
-
-# createUserAndGroup() {
-#     # Alpine has default www-data user set with userId and groupId as 82
-#     # Ubuntu on the otherhand has the same user with userId and groupId as 33.
-#     # Since they are mismatch we need a user/group that matches with alpines userId.
-#     # Hence adding a new user: espocrm with userId/groupId as 82.
-#
-#     # Create a new group with group id as 82. Basically force group to be created with 82 as groupId
-#     # If group is not there then create group
-#     isVerbose
-#     if [ ! $(getent group espocrm) ]
-#     then
-#         sudo addgroup --gid 82 espocrm
-#     fi
-#
-#     # Create a new user with userId 82.
-#     # If user is not present create a new user
-#     if [ ! $(getent passwd espocrm) ]
-#     then
-#         sudo adduser --system --shell /bin/bash --no-create-home --uid 82 --gid 82 --disabled-login espocrm
-#     fi
-#
-#     # Adds espocrm User to espocrm Group
-#     # Syntax: adduser user group
-#     sudo adduser espocrm espocrm
-#
-#     # Adding espocrm to $USER group.
-#     sudo usermod -aG espocrm $USER
-#
-#     # This is inorder to avoid using sudo docker command
-#     # Just use docker command.
-#     sudo usermod -aG docker $USER
-#     sudo usermod -aG docker espocrm
-# }
-
-
 isVerbose() {
     if [ $verbose -eq 1 ]
     then
@@ -65,17 +29,14 @@ validateRunner() {
 showHelp() {
     # `cat << EOF` This means that cat should stop reading when EOF is detected
     cat << EOF
-Usage: ./installer -v <espo-version> -u <github-user> [-hV]
+Usage: ./installer -v <espo-version> [-hV]
 Install Pre-requisites for EspoCRM with docker in Development mode
 
-    -h, -help,          --help                  Display help
+    -h,Display help
 
-    -v, -espo-version,  --espo-version          Set and Download specific version of EspoCRM
+    -v,Set and Download specific version of EspoCRM
 
-    -V, -verbose,       --verbose               Run script in verbose mode. Will print out each step of execution.
-
-    -u, -github-user,   --github-user           Run script in verbose mode. Will print out each step of execution.
-
+    -V,Run script in verbose mode. Will print out each step of execution.
 
   If you get Permission denied while running docker commands such as
 
@@ -99,21 +60,26 @@ export verbose=0;
 
 # Documentation on getopts:
 # https://www.linkedin.com/pulse/command-line-named-parameters-bash-karthik-bhat-k/
-options=$(getopt -l "help,espo-version:,github-user:,verbose" -o "hv:u:V" -a -- "$@")
 
-# set --:
-# If no arguments follow this option, then the positional parameters are unset. Otherwise, the positional parameters
-# are set to the arguments, even if some of them begin with a ‘-’.
-eval set -- "$options"
-
-while true
+# Removed getopt as it doesn't work well with Mac
+while getopts "hv:V" FLAG
 do
-    case $1 in
-        -h|--help) showHelp; exit 0;;
-        -v|--espo-version) shift; export version=$1;;
-        -u|--github-user) shift; export githubUser=$1;;
-        -V|--verbose) export verbose=1;;
-        --) shift; break;;
+    case $FLAG in
+        h)
+            showHelp
+            exit 0
+            ;;
+        v)
+            shift
+            export version=$1
+            ;;
+        V)
+            export verbose=1
+            ;;
+        \?)
+            showHelp
+            exit 0
+            ;;
     esac
     shift
 done
