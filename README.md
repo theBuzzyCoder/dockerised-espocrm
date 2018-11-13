@@ -26,7 +26,7 @@ sudo reboot
 ### Mac OS
 
 1. Go to Docker Preferences => File Sharing
-2. Add /crm path, otherwise docker volume mount will fail.
+2. Add `/crm` path, otherwise docker volume mount will fail.
 
 ## Installation [For Production]
 
