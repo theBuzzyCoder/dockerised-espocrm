@@ -3,7 +3,7 @@
 The folder structure is kept identical in host and the container image. This is so that the confusion is less
 and development happens smoothly.
 
-`/crm` is because the $HOME username changes from image to image. To keep it consistent and not to nest to many folder levels,
+`/crm` is because the `$HOME` username changes from image to image. To keep it consistent and not to nest to many folder levels,
 we kept `/crm` as the `WORKDIR`
 
 # Build Dockerfile
