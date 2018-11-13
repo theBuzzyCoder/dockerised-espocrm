@@ -1,0 +1,177 @@
+#!/bin/bash
+
+
+# createUserAndGroup() {
+#     # Alpine has default www-data user set with userId and groupId as 82
+#     # Ubuntu on the otherhand has the same user with userId and groupId as 33.
+#     # Since they are mismatch we need a user/group that matches with alpines userId.
+#     # Hence adding a new user: espocrm with userId/groupId as 82.
+#
+#     # Create a new group with group id as 82. Basically force group to be created with 82 as groupId
+#     # If group is not there then create group
+#     isVerbose
+#     if [ ! $(getent group espocrm) ]
+#     then
+#         sudo addgroup --gid 82 espocrm
+#     fi
+#
+#     # Create a new user with userId 82.
+#     # If user is not present create a new user
+#     if [ ! $(getent passwd espocrm) ]
+#     then
+#         sudo adduser --system --shell /bin/bash --no-create-home --uid 82 --gid 82 --disabled-login espocrm
+#     fi
+#
+#     # Adds espocrm User to espocrm Group
+#     # Syntax: adduser user group
+#     sudo adduser espocrm espocrm
+#
+#     # Adding espocrm to $USER group.
+#     sudo usermod -aG espocrm $USER
+#
+#     # This is inorder to avoid using sudo docker command
+#     # Just use docker command.
+#     sudo usermod -aG docker $USER
+#     sudo usermod -aG docker espocrm
+# }
+
+
+isVerbose() {
+    if [ $verbose -eq 1 ]
+    then
+        # Print a trace of simple commands, for commands, case commands, select commands, and arithmetic for commands
+        # and their arguments or associated word lists after they are expanded and before they are executed.
+        # The value of the PS4 variable is expanded and the resultant value is printed before the command and its expanded arguments.
+        # https://www.gnu.org/software/bash/manual/html_node/The-Set-Builtin.html
+        # Alias set -o xtrace
+        set -xv
+    fi
+}
+
+
+validateRunner() {
+    if [ $(id -u) -eq 0 ]
+    then
+        tput setaf 1
+        echo "Running as root is not allowed. Exiting ..."
+        tput setaf 9
+        exit 1
+    else
+        echo "Running as $USER ..."
+    fi
+}
+
+
+showHelp() {
+    # `cat << EOF` This means that cat should stop reading when EOF is detected
+    cat << EOF
+Usage: ./installer -v <espo-version> -u <github-user> [-hV]
+Install Pre-requisites for EspoCRM with docker in Development mode
+
+    -h, -help,          --help                  Display help
+
+    -v, -espo-version,  --espo-version          Set and Download specific version of EspoCRM
+
+    -V, -verbose,       --verbose               Run script in verbose mode. Will print out each step of execution.
+
+    -u, -github-user,   --github-user           Run script in verbose mode. Will print out each step of execution.
+
+
+  If you get Permission denied while running docker commands such as
+
+  $ docker container ls
+
+  Run this command first:
+
+  $ usermod -aG docker $USER
+
+  Reboot your system and run installer.
+
+EOF
+# EOF is found above and hence cat command stops reading. This is equivalent to echo but much neater when printing out.
+}
+
+
+validateRunner
+
+# Command-line Option builder and parser
+export verbose=0;
+
+# Documentation on getopts:
+# https://www.linkedin.com/pulse/command-line-named-parameters-bash-karthik-bhat-k/
+options=$(getopt -l "help,espo-version:,github-user:,verbose" -o "hv:u:V" -a -- "$@")
+
+# set --:
+# If no arguments follow this option, then the positional parameters are unset. Otherwise, the positional parameters
+# are set to the arguments, even if some of them begin with a ‘-’.
+eval set -- "$options"
+
+while true
+do
+    case $1 in
+        -h|--help) showHelp; exit 0;;
+        -v|--espo-version) shift; export version=$1;;
+        -u|--github-user) shift; export githubUser=$1;;
+        -V|--verbose) export verbose=1;;
+        --) shift; break;;
+    esac
+    shift
+done
+
+
+# See if version is set
+if [ -z $version ];
+then
+    tput setaf 1;
+    echo "ERROR: Version not found";
+    tput init;
+    showHelp;
+    exit 1;
+fi
+
+if [ $(pwd) != "/crm" ];
+then
+  echo "Expected path: /crm";
+fi
+
+# This is to build images
+docker build -f webapp/Dockerfile -t crm-webapp:1.0.0 --build-arg VERSION=$version .
+
+sudo chown -R $USER:$USER .;
+
+export WORKDIR=$(pwd);
+export CRMDIR=$WORKDIR/espocrm;
+export PROJECTS=$WORKDIR/projects;
+python $WORKDIR/repo_tools/install.py
+
+if [ ! -d $CRMDIR ];
+then
+    cd $WORKDIR;
+    wget -O /tmp/espocrm.zip https://github.com/espocrm/espocrm/archive/$version.zip;
+    unzip -d . /tmp/espocrm.zip;
+    mv espocrm-$version espocrm;
+else
+    echo "EspoCRM repository already exists";
+fi
+
+cd $CRMDIR;
+
+docker run --rm -v $(pwd):/app composer:1.7.2 install -o --ignore-platform-reqs;
+
+if [ ! -d $CRMDIR/build/EspoCRM-$version ];
+then
+    docker run --rm -v $(pwd):/srv huli/grunt:alpine --force;
+fi
+
+sudo usermod -aG nogroup $USER
+sudo chown -R nobody:nogroup $CRMDIR
+cd $WORKDIR;
+
+# This is to add extensions after building images.
+docker-compose -f dev.docker-compose.yml up -d
+
+cat << EOF
+
+Special Note: After reboot, no need to use sudo while running docker command!
+
+EOF

@@ -1,0 +1,56 @@
+version: '3.3'
+services:
+  mysqldb:
+    env_file:
+      - .env
+    image: mysql:5.7
+    container_name: crmMysql
+    ports:
+      - 3364:3306
+    environment:
+      MYSQL_ROOT_PASSWORD: ${mysql_root_passwd}
+      MYSQL_USER: ${mysql_user}
+      MYSQL_PASSWORD: ${mysql_passwd}
+      MYSQL_DATABASE: ${mysql_db}
+    volumes:
+      - mysql-test-data:/var/lib/mysql
+
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    ports:
+      - 8000:80
+    links:
+      - mysqldb:mysql
+    container_name: crmMyadmin
+    environment:
+      - PMA_ARBITRARY=1
+    restart: always
+
+  webserver:
+    container_name: crmServer
+    image: crm-webapp:1.0.0
+    build:
+      context: .
+      dockerfile: webapp/Dockerfile
+      args:
+        VERSION: ${espo}
+    ports:
+      - 8088:80
+    environment:
+      NGINX_STATIC_CONTENT_OPEN_FILE_CACHE: "off"
+      NGINX_ERROR_LOG_LEVEL: debug
+      NGINX_BACKEND_HOST: php
+      NGINX_SERVER_ROOT: /var/www/html
+      DB_HOST: ${mysql_host}
+      DB_USER: ${mysql_user}
+      DB_PASSWORD: ${mysql_passwd}
+      DB_NAME: ${mysql_db}
+      DB_DRIVER: mysqldb:mysql
+    links:
+      - mysqldb:mysql
+    volumes:
+      - ./espocrm/data:/crm/espocrm/data
+    command: "nginx -g 'daemon off;'"
+
+volumes:
+  mysql-test-data:
