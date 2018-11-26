@@ -1,0 +1,13 @@
+{
+   "labels":{
+      "Create Project":"Create Project"
+   },
+   "fields":{
+      "name":"Name",
+      "status":"Status",
+      "account":"Account"
+   },
+   "links":{
+      "projectTasks":"Project Tasks"
+   }
+}

@@ -1,0 +1,10 @@
+{
+   "scopeNames":{
+      "Project":"Project",
+      "ProjectTask":"Project Task"
+   },
+   "scopeNamesPlural":{
+      "Project":"Projects",
+      "ProjectTask":"Project Tasks"
+   }
+}

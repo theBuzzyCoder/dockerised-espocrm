@@ -31,13 +31,17 @@ services:
     image: crm-webapp:1.0.0
     build:
       context: .
-      dockerfile: webapp/Dockerfile
+      dockerfile: webapp/project1/Dockerfile
       args:
         VERSION: ${espo}
     ports:
       - 8088:80
     volumes:
       - ./espocrm:/crm/espocrm
+      - ./projects/project1/application:/crm/espocrm/custom
+      - ./projects/project1/client/custom:/crm/espocrm/client/custom
+      - ./addons/PM-Extension/files/application/Espo/Modules/PM:/crm/espocrm/application/Espo/Modules/PM
+      # - ./addons/PM-Extension/files/client/modules/pm:/crm/espocrm/client/modules/pm
       - ./tests:/crm/espocrm/tests
       - ./etc/nginx/conf.d/espocrm.conf:/etc/nginx/conf.d/default.conf:ro
     environment:

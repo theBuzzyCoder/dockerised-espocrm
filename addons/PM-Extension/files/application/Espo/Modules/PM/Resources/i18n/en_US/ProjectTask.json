@@ -1,0 +1,14 @@
+{
+   "labels":{
+      "Create ProjectTask":"Create Project Task"
+   },
+   "fields":{
+      "name":"Name",
+      "status":"Status",
+      "project":"Project",
+      "dateStart":"Date Start",
+      "dateEnd":"Date End",
+      "estimatedEffort":"Estimated Effort (hrs)",
+      "actualDuration":"Actual Duration (hrs)"
+   }
+}

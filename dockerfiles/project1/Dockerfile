@@ -30,9 +30,12 @@ LABEL MAINTAINER="@theBuzzyCoder"
 ARG VERSION
 
 COPY --from=builder --chown=nobody:nogroup /espocrm/build/EspoCRM-$VERSION /crm/espocrm
+COPY --chown=nobody:nogroup ./projects/project1/application /crm/espocrm/custom
+COPY --chown=nobody:nogroup ./projects/project1/client/custom /crm/espocrm/client/custom
+COPY --chown=nobody:nogroup ./addons/PM-Extension/files /crm/espocrm
 COPY ./etc/nginx/conf.d/espocrm.conf /etc/nginx/conf.d/default.conf
 
-COPY ./webapp/entrypoint /usr/local/bin/entrypoint
+COPY ./dockerfiles/project1/entrypoint /usr/local/bin/entrypoint
 
 WORKDIR /crm/espocrm
 

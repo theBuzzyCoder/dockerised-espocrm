@@ -31,7 +31,7 @@ services:
     image: crm-webapp:1.0.0
     build:
       context: .
-      dockerfile: webapp/Dockerfile
+      dockerfile: webapp/project1/Dockerfile
       args:
         VERSION: ${espo}
     ports:

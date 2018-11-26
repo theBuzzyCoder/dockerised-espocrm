@@ -1,0 +1,12 @@
+{
+    "name": "Project Management",
+    "version": "1.0.0",
+    "acceptableVersions": [
+        ">=3.0.0"
+    ],
+    "releaseDate": "2015-02-14",
+    "author": "EspoCRM",
+    "description": "Project Management extension for EspoCRM.",
+    "delete": [
+    ]
+}
