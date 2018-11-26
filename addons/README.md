@@ -162,5 +162,9 @@ In `Dockerfile`, use below
 COPY ./projects/<project-name>/files /crm/espocrm
 ```
 
+## TO-DO
+
+- Need to figure out how to run before install and after install scripts.
+
 ---
 [HOME](../README.md)
