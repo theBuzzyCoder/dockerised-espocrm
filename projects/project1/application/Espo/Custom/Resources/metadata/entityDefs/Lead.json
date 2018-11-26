@@ -1,0 +1,13 @@
+{
+    "fields": {
+        "accountName": {
+            "tooltipText": "company name",
+            "isPersonalData": false,
+            "required": false,
+            "trim": false,
+            "audited": false,
+            "readOnly": false,
+            "tooltip": true
+        }
+    }
+}
